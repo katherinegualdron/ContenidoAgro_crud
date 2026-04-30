@@ -1,8 +1,8 @@
-module API_GO_CRUD
+module CONTENIDO
 
-go 1.26.2
+go 1.22.0
 
 require (
 	github.com/gorilla/mux v1.8.1
-	github.com/lib/pq v1.12.3
+	github.com/lib/pq v1.10.9
 )

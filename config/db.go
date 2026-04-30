@@ -6,7 +6,7 @@ import(
 	"log" //imprimir y manejar logs 
 
 
-	_ "github.com/lib/pq" // Driver postgresSQL
+	"github.com/lib/pq" // Driver postgresSQL
 
 )
 
