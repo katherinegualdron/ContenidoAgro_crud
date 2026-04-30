@@ -26,15 +26,11 @@ psqlInfo :=fmt.Sprintf(
 	"host=%s port=%d user=%s password=%s dbname=%s search_path=%s sslmode=disable",
 	host,port,user,password,dbname,schema,
 )
-
 //abrir conexion db
-
 db, err:= sql.Open("postgres",psqlInfo)
-
 if err!=nil {
 	log.Fatal("Error al conectar:", err)
 }
-
 err =db.Ping()
 if err != nil{
 	log.Fatal("No se puede conectar:",err)

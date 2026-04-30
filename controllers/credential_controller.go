@@ -1,12 +1,13 @@
 package controllers
 
 import (
-	"API_GO_CRUD/config"
-	"API_GO_CRUD/models"
 	"encoding/json"
 	"net/http"
+	"strconv"
 
-	"github.com/gorilla/mux" //libreria para crear rutas
+	"CONTENIDO/config"
+
+	"github.com/gorilla/mux"
 )
 
 // Helper respuesta JSON
