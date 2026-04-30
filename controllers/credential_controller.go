@@ -10,98 +10,44 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// Helper respuesta JSON
-func responJSON(w http.ResponseWriter, status int, payload interface{}) {
+func getIDFromRequest(r *http.Request, key string) (int, error) {
+	return strconv.Atoi(mux.Vars(r)[key])
+}
+
+func writeJSON(w http.ResponseWriter, statusCode int, data any) {
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(status)
-	json.NewEncoder(w).Encode(payload)
+	w.WriteHeader(statusCode)
+	_ = json.NewEncoder(w).Encode(data)
 }
 
-// get ALL
-func GetALLCredentials(w http.ResponseWriter, r *http.Request) {
-	rows, err := config.DB.Query("SELECT id, id_user, pssword FROM credentials")
-	if err != nil {
-		responJSON(w, 500, map[string]string{"error": err.Error()})
-		return
-	}
-	defer rows.Close()
-
-	var list []models.Credential
-
-	for rows.Next() {
-		var c models.Credential
-		if err := rows.Scan(&c.ID, &c.ID_User, &c.Password); err != nil {
-			responJSON(w, 500, map[string]string{"error": err.Error()})
-			return
-		}
-		list = append(list, c)
-	}
-
-	if err := rows.Err(); err != nil {
-		responJSON(w, 500, map[string]string{"error": err.Error()})
-		return
-	}
-
-	responJSON(w, 200, list)
+func writeError(w http.ResponseWriter, statusCode int, message string) {
+	writeJSON(w, statusCode, map[string]string{"error": message})
 }
 
-// GetByID
-func GetCredentialByID(w http.ResponseWriter, r *http.Request) {
-	id := mux.Vars(r)["id"]
-
-	var c models.Credential
-
-	err := config.DB.QueryRow(
-		"SELECT id, id_user, pssword FROM credentials WHERE id=$1", id,
-	).Scan(&c.ID, &c.ID_User, &c.Password)
-	if err != nil {
-		responJSON(w, 500, map[string]string{"error": err.Error()})
-		return
+func existeRegistro(tabla string, columna string, id int) (bool, error) {
+	query := "SELECT EXISTS (SELECT 1 FROM " + tabla + " WHERE " + columna + " = $1)"
+	var existe bool
+	if err := config.DB.QueryRow(query, id).Scan(&existe); err != nil {
+		return false, err
 	}
-	responJSON(w, 200, c)
+	return existe, nil
 }
 
-// create credential
-func CreateCredential(w http.ResponseWriter, r *http.Request) {
-	var c models.Credential
-	json.NewDecoder(r.Body).Decode(&c)
-
-	err := config.DB.QueryRow(
-		"INSERT INTO credentials (id_user, pssword) VALUES ($1, $2) RETURNING id",
-		c.ID_User, c.Password,
-	).Scan(&c.ID)
+func eliminarGenericoContenido(w http.ResponseWriter, r *http.Request, tabla string, columna string, nombre string) {
+	id, err := getIDFromRequest(r, "id")
 	if err != nil {
-		responJSON(w, 500, map[string]string{"error": err.Error()})
+		writeError(w, http.StatusBadRequest, "id invalido")
 		return
 	}
-	responJSON(w, 201, c)
-}
-func UpdateCredential(w http.ResponseWriter, r *http.Request) {
-	id := mux.Vars(r)["id"]
-
-	var c models.Credential
-	json.NewDecoder(r.Body).Decode(&c)
-
-	_, err := config.DB.Exec(
-		"UPDATE credentials SET pssword=$1 WHERE id=$2",
-		c.Password, id,
-	)
-
+	result, err := config.DB.Exec("DELETE FROM "+tabla+" WHERE "+columna+" = $1", id)
 	if err != nil {
-		responJSON(w, 500, map[string]string{"error": err.Error()})
+		writeError(w, http.StatusInternalServerError, "error al eliminar "+nombre)
 		return
 	}
-	responJSON(w, 200, map[string]string{"message": "Dato actualizado"})
-}
-
-// delete
-func DeleteCredential(w http.ResponseWriter, r *http.Request) {
-	id := mux.Vars(r)["id"]
-
-	_, err := config.DB.Exec("DELETE FROM credentials WHERE id=$1", id)
-	if err != nil {
-		responJSON(w, 500, map[string]string{"error": err.Error()})
+	rows, _ := result.RowsAffected()
+	if rows == 0 {
+		writeError(w, http.StatusNotFound, nombre+" no encontrado")
 		return
 	}
-	responJSON(w, 200, map[string]string{"message": "Dato eliminado"})
+	writeJSON(w, http.StatusOK, map[string]string{"message": nombre + " eliminado correctamente"})
 }
