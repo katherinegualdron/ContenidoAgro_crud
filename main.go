@@ -14,8 +14,7 @@ func main() {
 	config.ConnectDB()
 
 	router := mux.NewRouter()
-	routes.RegistrarRutas(router)
-
-	log.Println("Servidor CONTENIDO escuchando en :8092")
-	log.Fatal(http.ListenAndServe(":8092", router))
+    routes.RegistrarRutasVideoEducativo(router)
+	log.Println("Servidor CONTENIDO escuchando en :8083")
+	log.Fatal(http.ListenAndServe(":8083", router))
 }

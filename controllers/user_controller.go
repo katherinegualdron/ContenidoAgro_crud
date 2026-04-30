@@ -1,8 +1,8 @@
 package controllers
 
-import (
-	"API_GO_CRUD/config"
-	"API_GO_CRUD/models"
+import( 
+	"CONTENIDO/config"
+    "CONTENIDO/models" 
 	"encoding/json"
 	"net/http"
 
@@ -13,7 +13,14 @@ import (
 func respondJSON(w http.ResponseWriter, status int, payload interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
-	json.NewEncoder(w).Encode(payload)
+	json.NewEncoder(w).Encode(payload)}
+
+
+func ObtenerCategoria(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{
+		"message": "Funciona ObtenerCategoria",
+	})
 }
 
 // Get ALL
@@ -21,7 +28,8 @@ func respondJSON(w http.ResponseWriter, status int, payload interface{}) {
 func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	
 	rows, err := config.DB.Query("SELECT id, name, email, age, activo FROM users")
-
+	
+	
 	if err != nil {
 		respondJSON(w, 500, map[string]string{"Error": err.Error()})
 		return
@@ -30,10 +38,15 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	var list []models.User
 
 	for rows.Next() {
-		var u models.User
-		rows.Scan(&u.ID, &u.Name, &u.Email, &u.Age, &u.Activo)
-		list = append(list, u)
+	var u models.User
+	
+	err := rows.Scan(&u.ID, &u.Name, &u.Email, &u.Age, &u.Activo)
+	if err != nil {
+		continue
 	}
+	
+	list = append(list, u)
+}
 
 	respondJSON(w, 200, list)
 }

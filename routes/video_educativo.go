@@ -1,15 +1,16 @@
-package models
+package routes
 
-import "time"
+import (
+	"CONTENIDO/controllers"
 
-type VideoEducativo struct {
-	IdVideo           int       `json:"id_video"`
-	Titulo            string    `json:"titulo"`
-	Descripcion       string    `json:"descripcion"`
-	UrlVideo          string    `json:"url_video"`
-	IdUsuario         int       `json:"id_usuario"`
-	Estado            string    `json:"estado"`
-	Activo            bool      `json:"activo"`
-	FechaCreacion     time.Time `json:"fecha_creacion"`
-	FechaModificacion time.Time `json:"fecha_modificacion"`
+	"github.com/gorilla/mux"
+)
+
+func RegistrarRutasVideoEducativo(router *mux.Router) {
+	
+router.HandleFunc("/users", controllers.GetAllUsers).Methods("GET")
+router.HandleFunc("/users/{id}", controllers.GetUserByID).Methods("GET")
+router.HandleFunc("/users", controllers.CreateUser).Methods("POST")
+router.HandleFunc("/users/{id}", controllers.UpdateUser).Methods("PUT")
+router.HandleFunc("/users/{id}", controllers.DeleteUser).Methods("DELETE")
 }
