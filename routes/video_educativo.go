@@ -7,10 +7,9 @@ import (
 )
 
 func RegistrarRutasVideoEducativo(router *mux.Router) {
-	
-router.HandleFunc("/users", controllers.GetAllUsers).Methods("GET")
-router.HandleFunc("/users/{id}", controllers.GetUserByID).Methods("GET")
-router.HandleFunc("/users", controllers.CreateUser).Methods("POST")
-router.HandleFunc("/users/{id}", controllers.UpdateUser).Methods("PUT")
-router.HandleFunc("/users/{id}", controllers.DeleteUser).Methods("DELETE")
+	router.HandleFunc("/video_educativo", controllers.ObtenerVideosEducativos).Methods("GET")
+	router.HandleFunc("/video_educativo/{id}", controllers.ObtenerVideoEducativoPorID).Methods("GET")
+	router.HandleFunc("/video_educativo", controllers.CrearVideoEducativo).Methods("POST")
+	router.HandleFunc("/video_educativo/{id}", controllers.ActualizarVideoEducativo).Methods("PUT")
+	router.HandleFunc("/video_educativo/{id}", controllers.EliminarVideoEducativo).Methods("DELETE")
 }

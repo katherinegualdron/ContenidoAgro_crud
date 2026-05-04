@@ -4,7 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-    _ "github.com/lib/pq"
+
+	_ "github.com/lib/pq"
 )
 
 var DB *sql.DB
@@ -13,9 +14,9 @@ func ConnectDB() {
 	host := "localhost"
 	port := 5432
 	user := "postgres"
-	password := "postgres"
-	dbname := "Agrocampo"
-	schema := "Contenido"
+	password := "transversal10"
+	dbname := "AgroCampo"
+	schema := "\"Contenido\""
 
 	psqlInfo := fmt.Sprintf(
 		"host=%s port=%d user=%s password=%s dbname=%s search_path=%s sslmode=disable",

@@ -7,13 +7,9 @@ import (
 )
 
 func RegistrarRutasCategoria(router *mux.Router) {
-	router.HandleFunc("/users", controllers.GetAllUsers).Methods("GET")
-    router.HandleFunc("/users/{id}", controllers.GetUserByID).Methods("GET")
-    router.HandleFunc("/users", controllers.CreateUser).Methods("POST")
-    router.HandleFunc("/users/{id}", controllers.UpdateUser).Methods("PUT")
-    router.HandleFunc("/users/{id}", controllers.DeleteUser).Methods("DELETE")
-
+	router.HandleFunc("/categoria", controllers.ObtenerCategorias).Methods("GET")
+	router.HandleFunc("/categoria/{id}", controllers.ObtenerCategoriaPorID).Methods("GET")
+	router.HandleFunc("/categoria", controllers.CrearCategoria).Methods("POST")
+	router.HandleFunc("/categoria/{id}", controllers.ActualizarCategoria).Methods("PUT")
+	router.HandleFunc("/categoria/{id}", controllers.EliminarCategoria).Methods("DELETE")
 }
-
-
-
