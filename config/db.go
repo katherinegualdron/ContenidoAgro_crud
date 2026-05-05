@@ -14,8 +14,8 @@ func ConnectDB() {
 	host := "localhost"
 	port := 5432
 	user := "postgres"
-	password := "transversal10"
-	dbname := "AgroCampo"
+	password := "postgres"
+	dbname := "Agrocampo"
 	schema := "\"Contenido\""
 
 	psqlInfo := fmt.Sprintf(
